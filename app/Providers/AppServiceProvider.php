@@ -20,15 +20,40 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->shouldForceHttps()) {
+            $this->forceHttpsUrls();
+        }
+    }
+
+    private function shouldForceHttps(): bool
+    {
+        if ($this->app->environment('production')) {
+            return true;
+        }
+
         $appUrl = config('app.url');
 
         if (is_string($appUrl) && str_starts_with($appUrl, 'https://')) {
-            URL::forceRootUrl(rtrim($appUrl, '/'));
-            URL::forceScheme('https');
+            return true;
+        }
 
-            if (config('session.secure') === null) {
-                config(['session.secure' => true]);
-            }
+        return ! $this->app->runningInConsole() && request()->isSecure();
+    }
+
+    private function forceHttpsUrls(): void
+    {
+        URL::forceScheme('https');
+
+        $appUrl = config('app.url');
+
+        if (is_string($appUrl) && $appUrl !== '') {
+            URL::forceRootUrl(preg_replace('#^http://#i', 'https://', rtrim($appUrl, '/')));
+        } elseif (! $this->app->runningInConsole()) {
+            URL::forceRootUrl('https://'.request()->getHttpHost());
+        }
+
+        if (config('session.secure') === null) {
+            config(['session.secure' => true]);
         }
     }
 }

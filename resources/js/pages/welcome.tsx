@@ -1,4 +1,9 @@
-export default function DashboardSaranaUmum() {
+import { APP_TITLE, useAppLogoUrl } from '@/lib/app-brand';
+import { Head, Link } from '@inertiajs/react';
+import { LogIn } from 'lucide-react';
+
+export default function Welcome() {
+  const logoUrl = useAppLogoUrl();
   const stats = [
     {
       title: 'Total Sarana',
@@ -55,20 +60,27 @@ export default function DashboardSaranaUmum() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="mb-8 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800">
-            Dashboard Sarana Umum
-          </h1>
-          <p className="text-gray-500">
-            Sistem Pengajuan Penggunaan Sarana dan Prasarana
-          </p>
-        </div>
+    <>
+      <Head title="Beranda" />
 
-        <button className="rounded-2xl bg-black px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:scale-105">
-          + Tambah Pengajuan
-        </button>
+      <div className="min-h-screen bg-gray-100 p-6">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-4">
+            <img src={logoUrl} alt={APP_TITLE} className="h-14 w-auto object-contain sm:h-16" />
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800 sm:text-3xl">{APP_TITLE}</h1>
+              <p className="text-gray-500">Sistem Pengajuan Penggunaan Sarana dan Prasarana</p>
+            </div>
+          </div>
+
+        <Link
+          href={route('login')}
+          prefetch
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-[#d4af37] via-[#f5d061] to-[#b8860b] px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg transition hover:scale-[1.02]"
+        >
+          <LogIn className="size-4" />
+          Masuk
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -223,6 +235,7 @@ export default function DashboardSaranaUmum() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
