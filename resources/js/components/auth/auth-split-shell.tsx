@@ -36,7 +36,7 @@ export function AuthSplitShell({ activeTab, header, children }: AuthSplitShellPr
                     <div className="mb-8 flex rounded-full bg-slate-100 p-1">
                         <Link
                             href={route('login')}
-                            prefetch
+                           
                             className={cn(
                                 'flex flex-1 items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold transition',
                                 activeTab === 'login'
@@ -48,7 +48,7 @@ export function AuthSplitShell({ activeTab, header, children }: AuthSplitShellPr
                         </Link>
                         <Link
                             href={route('register')}
-                            prefetch
+                           
                             className={cn(
                                 'flex flex-1 items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold transition',
                                 activeTab === 'register'

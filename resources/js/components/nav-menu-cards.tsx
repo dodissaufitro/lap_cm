@@ -113,7 +113,7 @@ function WelcomeGuestBanner() {
                 </div>
                 <Link
                     href={route('login')}
-                    prefetch
+                   
                     className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#38bdf8] px-5 py-3 text-sm font-semibold text-white shadow-md shadow-sky-500/30 transition hover:bg-sky-400"
                 >
                     <LogIn className="size-4" />
@@ -178,7 +178,7 @@ function MenuGridCard({
     return (
         <Link
             href={href}
-            prefetch
+           
             className={cn(
                 'hub-glass-card hub-glass-card-interactive flex min-h-[12rem] flex-col items-center gap-4 p-5 sm:min-h-[13rem] sm:gap-4 sm:p-6 md:min-h-[13.5rem] lg:min-h-[14.5rem] lg:gap-5 lg:p-7 xl:min-h-[15.5rem]',
                 isActive && 'hub-glass-card-active',

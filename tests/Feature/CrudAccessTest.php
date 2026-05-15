@@ -136,6 +136,36 @@ class CrudAccessTest extends TestCase
         $this->assertSame('draft', $created->status);
     }
 
+    public function test_pemohon_can_open_edit_page_for_editable_pengajuan(): void
+    {
+        $pemohon = User::query()->where('email', 'pemohon1@lapcm.test')->first();
+
+        $pengajuan = Pengajuan::query()
+            ->where('user_id', $pemohon->id)
+            ->whereIn('status', ['draft', 'diajukan', 'diproses'])
+            ->first();
+
+        if (! $pengajuan) {
+            $pengajuan = Pengajuan::query()->where('user_id', $pemohon->id)->first();
+            $pengajuan?->update(['status' => 'diajukan']);
+        }
+
+        $this->assertNotNull($pengajuan);
+
+        $this->actingAs($pemohon)
+            ->get(route('pengajuans.edit', $pengajuan))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('pengajuans/edit')
+                ->has('item.id')
+                ->has('item.tanggal_pengajuan')
+                ->has('item.tanggal_mulai')
+                ->has('item.tanggal_selesai')
+                ->where('item.tanggal_pengajuan', fn (string $date) => preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) === 1)
+                ->where('item.tanggal_mulai', fn (string $date) => preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/', $date) === 1)
+                ->has('saranas'));
+    }
+
     public function test_pemohon_store_rejects_status_outside_draft_and_diajukan(): void
     {
         $pemohon1 = User::query()->where('email', 'pemohon1@lapcm.test')->first();

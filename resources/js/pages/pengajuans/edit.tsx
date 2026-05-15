@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
-import { toDatetimeLocal } from '@/lib/datetime';
+import { toDateInput, toDatetimeLocal } from '@/lib/datetime';
 import { type BreadcrumbItem } from '@/types';
 import { type SelectOption } from '@/types/crud';
 import { Head, Link, useForm } from '@inertiajs/react';
@@ -59,6 +59,8 @@ const pemohonStatusValues = ['draft', 'diajukan'] as const;
 
 export default function PengajuansEdit({ item, saranas, users, authUser, statusOptions, isAdmin, isPemohon }: Props) {
     const pemohon = item.user ?? authUser;
+    const pemohonName = pemohon?.name ?? '—';
+    const pemohonEmail = pemohon?.email ?? '—';
     const pemohonStatusOptions = statusOptions.filter((o) =>
         pemohonStatusValues.includes(o.value as (typeof pemohonStatusValues)[number]),
     );
@@ -73,7 +75,7 @@ export default function PengajuansEdit({ item, saranas, users, authUser, statusO
     const { data, setData, put, processing, errors } = useForm({
         sarana_id: String(item.sarana_id),
         ...(isAdmin ? { user_id: String(item.user_id) } : {}),
-        tanggal_pengajuan: item.tanggal_pengajuan?.slice(0, 10) ?? '',
+        tanggal_pengajuan: toDateInput(item.tanggal_pengajuan),
         tanggal_mulai: toDatetimeLocal(item.tanggal_mulai),
         tanggal_selesai: toDatetimeLocal(item.tanggal_selesai),
         tujuan_penggunaan: item.tujuan_penggunaan,
@@ -115,8 +117,8 @@ export default function PengajuansEdit({ item, saranas, users, authUser, statusO
                         ) : (
                             <div className="rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3 dark:border-white/10 dark:bg-white/[0.04]">
                                 <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">Pemohon</p>
-                                <p className="mt-1 font-semibold text-foreground">{pemohon.name}</p>
-                                <p className="text-sm text-muted-foreground">{pemohon.email}</p>
+                                <p className="mt-1 font-semibold text-foreground">{pemohonName}</p>
+                                <p className="text-sm text-muted-foreground">{pemohonEmail}</p>
                             </div>
                         )}
 

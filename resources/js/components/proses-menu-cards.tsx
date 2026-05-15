@@ -41,7 +41,7 @@ function ProsesGridCard({
     return (
         <Link
             href={href}
-            prefetch
+           
             className="hub-glass-card hub-glass-card-interactive flex min-h-[12rem] flex-col items-center gap-4 p-5 sm:min-h-[13rem] sm:p-6 lg:min-h-[14.5rem] lg:p-7"
         >
             <MenuIconRing Icon={Icon} ringClass={ringClass} />

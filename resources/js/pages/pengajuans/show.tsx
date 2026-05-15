@@ -61,7 +61,7 @@ const approvalLabels: Record<string, string> = {
     revisi: 'Revisi',
 };
 
-export default function PengajuansShow({ item, statusLabel, canEdit, canDelete }: Props) {
+export default function PengajuansShow({ item, statusLabel, canEdit, canDelete, checkInDocumentUrl }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
         { title: 'Pengajuan', href: '/pengajuans' },

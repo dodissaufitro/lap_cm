@@ -67,15 +67,9 @@ export function SaranaSelectField({
                     value={saranaId}
                     onChange={handleSaranaChange}
                     options={saranaOptions}
-                    placeholder={
-                        !datesReady
-                            ? 'Isi tanggal mulai & selesai terlebih dahulu'
-                            : loading
-                              ? 'Memuat ketersediaan sarana...'
-                              : 'Pilih sarana'
-                    }
+                    placeholder={loading ? 'Memuat ketersediaan sarana...' : 'Pilih sarana'}
                     error={error}
-                    disabled={!datesReady || loading}
+                    disabled={loading}
                 />
                 {datesReady && !loading && (
                     <p className="text-xs text-muted-foreground">

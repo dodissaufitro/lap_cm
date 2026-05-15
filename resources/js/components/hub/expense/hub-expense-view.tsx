@@ -123,7 +123,7 @@ function HubExpenseRowActions({
             {editHref && (
                 <Link
                     href={editHref}
-                    prefetch
+                   
                     className="hub-expense-action-btn hub-expense-action-edit"
                     aria-label="Edit"
                     onClick={(e) => e.stopPropagation()}
@@ -191,7 +191,7 @@ function HubExpenseRow({
                 hasLabelAction ? 'items-start sm:items-center' : 'items-center',
             )}
         >
-            <Link href={href} prefetch className="flex min-w-0 flex-1 items-center gap-3.5 lg:gap-4">
+            <Link href={href} className="flex min-w-0 flex-1 items-center gap-3.5 lg:gap-4">
                 <HubExpenseRowIcon icon={icon} imageUrl={imageUrl} title={title} />
                 <div className="min-w-0 flex-1">
                     <p className="truncate text-[15px] leading-tight font-semibold text-foreground lg:text-base">{title}</p>
@@ -256,7 +256,7 @@ export function HubExpenseView({
             <div className="hub-expense-hero safe-x relative shrink-0 px-5 pb-2 pt-4 sm:px-6 sm:pt-5 lg:flex lg:w-[min(100%,22rem)] lg:flex-col lg:justify-center lg:border-l lg:border-slate-200 lg:px-8 lg:py-8 dark:lg:border-white/10 xl:w-80">
                 <Link
                     href={backHref}
-                    prefetch
+                   
                     className="absolute top-4 left-4 flex size-9 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted lg:hidden"
                     aria-label={backLabel}
                 >
@@ -274,7 +274,7 @@ export function HubExpenseView({
                         {showCreateIconBesideTitle && (
                             <Link
                                 href={createHref!}
-                                prefetch
+                               
                                 className="hub-expense-action-btn hub-expense-action-primary lg:hidden"
                                 aria-label={createLabel}
                             >
@@ -294,7 +294,7 @@ export function HubExpenseView({
                 {showCreateBelowDonut && (
                     <Link
                         href={createHref!}
-                        prefetch
+                       
                         className={
                             isSheetOnlyPlacement
                                 ? 'hub-expense-create-btn mt-6 inline-flex w-full'
@@ -313,7 +313,7 @@ export function HubExpenseView({
                 {showCreateAboveList && (
                     <Link
                         href={createHref!}
-                        prefetch
+                       
                         className="hub-expense-create-btn mb-4 w-full shrink-0 lg:hidden"
                     >
                         <Plus className="size-4 shrink-0" />

@@ -161,7 +161,7 @@ export default function Login({ status, canResetPassword, demoUsers = [] }: Logi
                     </p>
                     <Link
                         href={route('register')}
-                        prefetch
+                       
                         className="inline-flex shrink-0 items-center justify-center rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
                     >
                         Daftar

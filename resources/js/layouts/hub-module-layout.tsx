@@ -1,4 +1,4 @@
-﻿import { AppShell } from '@/components/app-shell';
+import { AppShell } from '@/components/app-shell';
 import { AppTopHeader } from '@/components/app-top-header';
 
 interface HubModuleLayoutProps {

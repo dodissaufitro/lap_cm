@@ -1,4 +1,4 @@
-﻿import { type DashboardStat } from '@/types/dashboard';
+import { type DashboardStat } from '@/types/dashboard';
 import { cn } from '@/lib/utils';
 import { Building2, Calendar, CheckCircle2, Clock, FileText, XCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';

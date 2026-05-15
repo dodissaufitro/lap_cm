@@ -1,4 +1,4 @@
-﻿import { DeleteButton } from '@/components/crud/delete-button';
+import { DeleteButton } from '@/components/crud/delete-button';
 import { FlashAlert } from '@/components/crud/flash-alert';
 import { StatusBadge } from '@/components/dashboard/status-badge';
 import { Button } from '@/components/ui/button';
@@ -42,7 +42,7 @@ export default function SaranasShow({ item, canManage }: Props) {
                 <div className="safe-x relative shrink-0 border-b border-slate-200 px-5 py-4 sm:px-6 lg:px-8 dark:border-white/10">
                     <Link
                         href={route('saranas.index')}
-                        prefetch
+                       
                         className="absolute top-4 left-4 flex size-9 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted sm:left-5 lg:left-8"
                         aria-label="Kembali ke daftar sarana"
                     >

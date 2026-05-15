@@ -100,8 +100,13 @@ export function useSaranaAvailability(
     }, [datesReady, fetchAvailability]);
 
     const saranaOptions: SelectOption[] = useMemo(() => {
+        const baseOptions = saranas.map((s) => ({
+            value: String(s.id),
+            label: `${s.nama_sarana} (${s.kode_sarana})`,
+        }));
+
         if (!datesReady) {
-            return [];
+            return baseOptions;
         }
 
         return saranas.map((s) => {

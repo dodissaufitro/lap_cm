@@ -150,7 +150,7 @@ class PengajuanController extends Controller
         $actor = $this->user();
 
         return Inertia::render('pengajuans/edit', [
-            'item' => $pengajuan->load('user:id,name,email'),
+            'item' => $this->pengajuanFormItem($pengajuan),
             'saranas' => $this->selectableSaranas($pengajuan->id),
             'users' => $actor->isAdmin()
                 ? User::query()->where('role', UserRole::Pemohon)->orderBy('name')->get(['id', 'name'])
@@ -311,5 +311,32 @@ class PengajuanController extends Controller
         );
 
         return $validated;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function pengajuanFormItem(Pengajuan $pengajuan): array
+    {
+        $pengajuan->loadMissing('user:id,name,email');
+
+        return [
+            'id' => $pengajuan->id,
+            'nomor_pengajuan' => $pengajuan->nomor_pengajuan,
+            'sarana_id' => $pengajuan->sarana_id,
+            'user_id' => $pengajuan->user_id,
+            'tanggal_pengajuan' => $pengajuan->tanggal_pengajuan?->format('Y-m-d') ?? '',
+            'tanggal_mulai' => $pengajuan->tanggal_mulai?->format('Y-m-d\TH:i') ?? '',
+            'tanggal_selesai' => $pengajuan->tanggal_selesai?->format('Y-m-d\TH:i') ?? '',
+            'tujuan_penggunaan' => $pengajuan->tujuan_penggunaan,
+            'jumlah_peserta' => $pengajuan->jumlah_peserta,
+            'status' => $pengajuan->status,
+            'catatan_admin' => $pengajuan->catatan_admin,
+            'user' => $pengajuan->user ? [
+                'id' => $pengajuan->user->id,
+                'name' => $pengajuan->user->name,
+                'email' => $pengajuan->user->email,
+            ] : null,
+        ];
     }
 }
