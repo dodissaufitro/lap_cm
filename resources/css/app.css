@@ -543,6 +543,49 @@
         box-shadow: 0 4px 16px -4px rgba(199, 125, 255, 0.45);
     }
 
+    .hub-expense-action-btn.hub-expense-action-label {
+        width: auto;
+        min-width: 6.25rem;
+        height: auto;
+        min-height: 2.375rem;
+        padding: 0.5rem 1rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: 0.01em;
+    }
+
+    .hub-expense-action-primary.hub-expense-action-label:hover {
+        opacity: 0.95;
+        background: linear-gradient(135deg, #d18dff, #8b3fd4);
+    }
+
+    .hub-expense-action-btn.hub-expense-action-disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+        box-shadow: none;
+        pointer-events: none;
+    }
+
+    .hub-expense-action-primary.hub-expense-action-disabled {
+        background: linear-gradient(135deg, #9ca3af, #6b7280);
+    }
+
+    .dark .hub-expense-action-primary.hub-expense-action-disabled {
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (min-width: 640px) {
+        .hub-expense-action-btn.hub-expense-action-label {
+            min-width: 6.75rem;
+            padding: 0.5625rem 1.125rem;
+            font-size: 0.875rem;
+        }
+    }
+
     .hub-expense-action-edit {
         color: hsl(273 67% 35%);
         background: hsl(270 100% 97%);

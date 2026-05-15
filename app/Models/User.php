@@ -4,13 +4,14 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -60,17 +61,29 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->role === UserRole::Admin;
+        return $this->hasRole(UserRole::Admin);
     }
 
     public function isApprover(): bool
     {
-        return $this->role === UserRole::Approver;
+        return $this->hasRole(UserRole::Approver);
     }
 
     public function isPemohon(): bool
     {
-        return $this->role === UserRole::Pemohon;
+        return $this->hasRole(UserRole::Pemohon);
+    }
+
+    public function hasRole(UserRole $role): bool
+    {
+        return strtolower($this->roleValue()) === $role->value;
+    }
+
+    public function roleValue(): string
+    {
+        $role = $this->role;
+
+        return $role instanceof UserRole ? $role->value : strtolower(trim((string) $role));
     }
 
     public function getRoleLabelAttribute(): string

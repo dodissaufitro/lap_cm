@@ -1,6 +1,7 @@
 import { FlashAlert } from '@/components/crud/flash-alert';
 import { PaginationLinks } from '@/components/crud/pagination-links';
 import { type HubExpenseListItem, type HubExpenseViewProps } from '@/types/hub-expense';
+import { cn } from '@/lib/utils';
 import { Link, router } from '@inertiajs/react';
 import { ChevronLeft, Pencil, PieChart, Plus, Trash2 } from 'lucide-react';
 
@@ -44,8 +45,26 @@ function HubExpenseDonut({ value, emoji }: { value: string; emoji: string }) {
     );
 }
 
-function HubExpenseRowActions({ editHref, deleteHref }: { editHref?: string; deleteHref?: string }) {
-    if (!editHref && !deleteHref) {
+function HubExpenseRowActions({
+    editHref,
+    deleteHref,
+    actionHref,
+    actionLabel,
+    actionDisabled,
+    actionDisabledReason,
+    ticketHref,
+    ticketLabel,
+}: {
+    editHref?: string;
+    deleteHref?: string;
+    actionHref?: string;
+    actionLabel?: string;
+    actionDisabled?: boolean;
+    actionDisabledReason?: string;
+    ticketHref?: string;
+    ticketLabel?: string;
+}) {
+    if (!editHref && !deleteHref && !actionHref && !ticketHref) {
         return null;
     }
 
@@ -60,7 +79,47 @@ function HubExpenseRowActions({ editHref, deleteHref }: { editHref?: string; del
     };
 
     return (
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="relative z-10 flex shrink-0 items-center gap-1.5">
+            {ticketHref && (
+                <a
+                    href={ticketHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hub-expense-action-btn hub-expense-action-primary hub-expense-action-label"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {ticketLabel ?? 'Cetak Tiket'}
+                </a>
+            )}
+            {actionHref &&
+                (actionDisabled ? (
+                    <button
+                        type="button"
+                        disabled
+                        title={actionDisabledReason}
+                        className="hub-expense-action-btn hub-expense-action-primary hub-expense-action-label hub-expense-action-disabled"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {actionLabel ?? 'Proses'}
+                    </button>
+                ) : (
+                    <Link
+                        href={actionHref}
+                        method="post"
+                        as="button"
+                        type="button"
+                        preserveScroll
+                        className="hub-expense-action-btn hub-expense-action-primary hub-expense-action-label"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (!confirm(`Yakin ingin ${actionLabel?.toLowerCase() ?? 'melanjutkan'}?`)) {
+                                e.preventDefault();
+                            }
+                        }}
+                    >
+                        {actionLabel ?? 'Proses'}
+                    </Link>
+                ))}
             {editHref && (
                 <Link
                     href={editHref}
@@ -105,24 +164,67 @@ function HubExpenseRowIcon({ icon, imageUrl, title }: { icon: string; imageUrl?:
     );
 }
 
-function HubExpenseRow({ icon, imageUrl, title, subtitle, amount, date, href, editHref, deleteHref }: HubExpenseListItem) {
-    const hasActions = Boolean(editHref || deleteHref);
+function HubExpenseRow({
+    icon,
+    imageUrl,
+    title,
+    subtitle,
+    amount,
+    date,
+    href,
+    editHref,
+    deleteHref,
+    actionHref,
+    actionLabel,
+    actionDisabled,
+    actionDisabledReason,
+    ticketHref,
+    ticketLabel,
+}: HubExpenseListItem) {
+    const hasActions = Boolean(editHref || deleteHref || actionHref || ticketHref);
+    const hasLabelAction = Boolean(actionHref || ticketHref);
 
     return (
-        <div className="hub-expense-row flex items-center gap-2 rounded-xl py-2 transition lg:gap-3 lg:px-1 lg:py-2.5">
+        <div
+            className={cn(
+                'hub-expense-row flex gap-2 rounded-xl py-2 transition lg:gap-3 lg:px-1 lg:py-2.5',
+                hasLabelAction ? 'items-start sm:items-center' : 'items-center',
+            )}
+        >
             <Link href={href} prefetch className="flex min-w-0 flex-1 items-center gap-3.5 lg:gap-4">
                 <HubExpenseRowIcon icon={icon} imageUrl={imageUrl} title={title} />
                 <div className="min-w-0 flex-1">
                     <p className="truncate text-[15px] leading-tight font-semibold text-foreground lg:text-base">{title}</p>
                     <p className="mt-0.5 truncate text-[13px] text-muted-foreground lg:text-sm">{subtitle}</p>
+                    {hasLabelAction ? (
+                        <p className="mt-1 text-[12px] leading-snug text-muted-foreground sm:hidden">
+                            {amount} · {date}
+                        </p>
+                    ) : null}
                 </div>
             </Link>
-            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-                <div className="text-right">
+            <div
+                className={cn(
+                    'relative z-10 flex shrink-0 gap-2 sm:gap-3',
+                    hasLabelAction ? 'flex-col items-end pt-0.5 sm:flex-row sm:items-center sm:pt-0' : 'items-center',
+                )}
+            >
+                <div className={cn('text-right', hasLabelAction && 'hidden sm:block')}>
                     <p className="text-[15px] leading-tight font-semibold text-foreground lg:text-base">{amount}</p>
                     <p className="mt-0.5 text-[12px] text-muted-foreground lg:text-sm">{date}</p>
                 </div>
-                {hasActions && <HubExpenseRowActions editHref={editHref} deleteHref={deleteHref} />}
+                {hasActions && (
+                    <HubExpenseRowActions
+                        editHref={editHref}
+                        deleteHref={deleteHref}
+                        actionHref={actionHref}
+                        actionLabel={actionLabel}
+                        actionDisabled={actionDisabled}
+                        actionDisabledReason={actionDisabledReason}
+                        ticketHref={ticketHref}
+                        ticketLabel={ticketLabel}
+                    />
+                )}
             </div>
         </div>
     );
@@ -139,6 +241,8 @@ export function HubExpenseView({
     createLabel = 'Tambah',
     createPlacement = 'sheet-only',
     paginationLinks,
+    backHref = '/dashboard',
+    backLabel = 'Kembali ke dashboard',
 }: HubExpenseViewProps) {
     const summaryDisplay = typeof summaryValue === 'number' ? summaryValue.toLocaleString('id-ID') : summaryValue;
     const hasCreate = Boolean(createHref);
@@ -151,10 +255,10 @@ export function HubExpenseView({
         <div className="flex h-full min-h-0 flex-col lg:flex-row-reverse lg:overflow-hidden">
             <div className="hub-expense-hero safe-x relative shrink-0 px-5 pb-2 pt-4 sm:px-6 sm:pt-5 lg:flex lg:w-[min(100%,22rem)] lg:flex-col lg:justify-center lg:border-l lg:border-slate-200 lg:px-8 lg:py-8 dark:lg:border-white/10 xl:w-80">
                 <Link
-                    href="/dashboard"
+                    href={backHref}
                     prefetch
                     className="absolute top-4 left-4 flex size-9 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted lg:hidden"
-                    aria-label="Kembali ke dashboard"
+                    aria-label={backLabel}
                 >
                     <ChevronLeft className="size-5" />
                 </Link>

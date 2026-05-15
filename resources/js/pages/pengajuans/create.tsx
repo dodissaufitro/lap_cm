@@ -1,5 +1,6 @@
 import { FlashAlert } from '@/components/crud/flash-alert';
 import { FormCard } from '@/components/crud/form-card';
+import { SaranaSelectField } from '@/components/pengajuans/sarana-select-field';
 import { FormSelect } from '@/components/crud/form-select';
 import { PageHeader } from '@/components/crud/page-header';
 import InputError from '@/components/input-error';
@@ -23,9 +24,16 @@ interface Pemohon {
     name: string;
 }
 
+interface AuthUser {
+    id: number;
+    name: string;
+    email: string;
+}
+
 interface Props {
     saranas: Sarana[];
     users: Pemohon[];
+    authUser: AuthUser;
     statusOptions: SelectOption[];
     isAdmin: boolean;
 }
@@ -36,12 +44,17 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tambah', href: '/pengajuans/create' },
 ];
 
-export default function PengajuansCreate({ saranas, users, statusOptions, isAdmin }: Props) {
+const pemohonStatusValues = ['draft', 'diajukan'] as const;
+
+export default function PengajuansCreate({ saranas, users, authUser, statusOptions, isAdmin }: Props) {
     const today = new Date().toISOString().slice(0, 10);
+    const pemohonStatusOptions = statusOptions.filter((o) =>
+        pemohonStatusValues.includes(o.value as (typeof pemohonStatusValues)[number]),
+    );
 
     const { data, setData, post, processing, errors } = useForm({
-        sarana_id: saranas[0] ? String(saranas[0].id) : '',
-        user_id: users[0] ? String(users[0].id) : '',
+        sarana_id: '',
+        ...(isAdmin ? { user_id: users[0] ? String(users[0].id) : '' } : {}),
         tanggal_pengajuan: today,
         tanggal_mulai: '',
         tanggal_selesai: '',
@@ -50,11 +63,6 @@ export default function PengajuansCreate({ saranas, users, statusOptions, isAdmi
         status: 'diajukan',
         catatan_admin: '',
     });
-
-    const saranaOptions: SelectOption[] = saranas.map((s) => ({
-        value: String(s.id),
-        label: `${s.nama_sarana} (${s.kode_sarana})`,
-    }));
 
     const userOptions: SelectOption[] = users.map((u) => ({
         value: String(u.id),
@@ -77,26 +85,25 @@ export default function PengajuansCreate({ saranas, users, statusOptions, isAdmi
 
                 <FormCard>
                     <form onSubmit={submit} className="space-y-6">
-                        <FormSelect
-                            id="sarana_id"
-                            label="Sarana"
-                            value={data.sarana_id}
-                            onChange={(v) => setData('sarana_id', v)}
-                            options={saranaOptions}
-                            placeholder="Pilih sarana"
-                            error={errors.sarana_id}
-                        />
-
-                        {isAdmin && (
+                        {isAdmin ? (
                             <FormSelect
                                 id="user_id"
                                 label="Pemohon"
-                                value={data.user_id}
+                                value={data.user_id as string}
                                 onChange={(v) => setData('user_id', v)}
                                 options={userOptions}
                                 placeholder="Pilih pemohon"
                                 error={errors.user_id}
                             />
+                        ) : (
+                            <div className="rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3 dark:border-white/10 dark:bg-white/[0.04]">
+                                <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">Pemohon</p>
+                                <p className="mt-1 font-semibold text-foreground">{authUser.name}</p>
+                                <p className="text-sm text-muted-foreground">{authUser.email}</p>
+                                <p className="mt-2 text-xs text-muted-foreground">
+                                    Pengajuan akan tersimpan atas nama akun Anda.
+                                </p>
+                            </div>
                         )}
 
                         <div className="grid gap-2">
@@ -136,6 +143,15 @@ export default function PengajuansCreate({ saranas, users, statusOptions, isAdmi
                             </div>
                         </div>
 
+                        <SaranaSelectField
+                            saranas={saranas}
+                            saranaId={data.sarana_id}
+                            tanggalMulai={data.tanggal_mulai}
+                            tanggalSelesai={data.tanggal_selesai}
+                            onSaranaChange={(v) => setData('sarana_id', v)}
+                            error={errors.sarana_id}
+                        />
+
                         <div className="grid gap-2">
                             <Label htmlFor="tujuan_penggunaan">Tujuan Penggunaan</Label>
                             <textarea
@@ -166,7 +182,7 @@ export default function PengajuansCreate({ saranas, users, statusOptions, isAdmi
                             label="Status"
                             value={data.status}
                             onChange={(v) => setData('status', v)}
-                            options={statusOptions}
+                            options={isAdmin ? statusOptions : pemohonStatusOptions}
                             error={errors.status}
                         />
 

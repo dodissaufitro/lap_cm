@@ -9,6 +9,7 @@ use App\Support\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -41,11 +42,10 @@ class LampiranController extends Controller
     {
         abort_unless($this->user()->isPemohon() || $this->user()->isAdmin(), 403);
 
-        $pengajuanQuery = Pengajuan::query()->with('user:id,name')->latest();
-
-        if ($this->user()->isPemohon()) {
-            $pengajuanQuery->where('user_id', $this->user()->id);
-        }
+        $pengajuanQuery = Pengajuan::query()
+            ->visibleTo($this->user())
+            ->with('user:id,name')
+            ->latest();
 
         return Inertia::render('lampirans/create', [
             'pengajuans' => $pengajuanQuery->get(['id', 'nomor_pengajuan', 'user_id']),
@@ -56,8 +56,14 @@ class LampiranController extends Controller
     {
         abort_unless($this->user()->isPemohon() || $this->user()->isAdmin(), 403);
 
+        $pengajuanIdRule = Rule::exists('pengajuans', 'id');
+
+        if ($this->user()->isPemohon()) {
+            $pengajuanIdRule = $pengajuanIdRule->where('user_id', $this->user()->id);
+        }
+
         $validated = $request->validate([
-            'pengajuan_id' => 'required|exists:pengajuans,id',
+            'pengajuan_id' => ['required', $pengajuanIdRule],
             'file' => 'required|file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx',
         ]);
 

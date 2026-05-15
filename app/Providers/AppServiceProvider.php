@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Pengajuan;
+use App\Policies\PengajuanPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(Pengajuan::class, PengajuanPolicy::class);
+
         if ($this->shouldForceHttps()) {
             $this->forceHttpsUrls();
         }

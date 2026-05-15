@@ -49,6 +49,18 @@ class DashboardMenuCounts
                 'total' => self::lampiranCount($user),
                 'label' => 'berkas',
             ],
+            '/proses' => [
+                'total' => self::prosesPendingCount($user),
+                'label' => 'proses aktif',
+            ],
+            '/proses/check-in' => [
+                'total' => self::checkInCount($user),
+                'label' => 'menunggu check in',
+            ],
+            '/proses/check-out' => [
+                'total' => self::checkOutCount($user),
+                'label' => 'menunggu check out',
+            ],
             '/users' => [
                 'total' => User::query()->count(),
                 'label' => 'pengguna',
@@ -62,20 +74,7 @@ class DashboardMenuCounts
 
     private static function pengajuanCount(User $user): int
     {
-        return self::scopePengajuan(Pengajuan::query(), $user)->count();
-    }
-
-    /**
-     * @param  Builder<Pengajuan>  $query
-     * @return Builder<Pengajuan>
-     */
-    private static function scopePengajuan(Builder $query, User $user): Builder
-    {
-        if ($user->role === UserRole::Pemohon) {
-            $query->where('user_id', $user->id);
-        }
-
-        return $query;
+        return Pengajuan::query()->visibleTo($user)->count();
     }
 
     private static function approvalCount(User $user): int
@@ -109,5 +108,31 @@ class DashboardMenuCounts
         }
 
         return $query->count();
+    }
+
+    private static function prosesPendingCount(User $user): int
+    {
+        return self::checkInCount($user) + self::checkOutCount($user);
+    }
+
+    private static function checkInCount(User $user): int
+    {
+        PengajuanProsesService::cancelExpiredWithoutCheckIn();
+
+        return Pengajuan::query()
+            ->visibleTo($user)
+            ->where('status', 'disetujui')
+            ->whereNull('checked_out_at')
+            ->count();
+    }
+
+    private static function checkOutCount(User $user): int
+    {
+        return Pengajuan::query()
+            ->visibleTo($user)
+            ->where('status', 'disetujui')
+            ->whereNotNull('checked_in_at')
+            ->whereNull('checked_out_at')
+            ->count();
     }
 }

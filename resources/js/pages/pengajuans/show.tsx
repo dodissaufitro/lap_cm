@@ -51,6 +51,7 @@ interface Props {
     statusLabel: string;
     canEdit: boolean;
     canDelete: boolean;
+    checkInDocumentUrl?: string | null;
 }
 
 const approvalLabels: Record<string, string> = {
@@ -76,6 +77,13 @@ export default function PengajuansShow({ item, statusLabel, canEdit, canDelete }
                     title={item.nomor_pengajuan}
                     actions={
                         <>
+                            {checkInDocumentUrl && (
+                                <Button variant="secondary" asChild>
+                                    <a href={checkInDocumentUrl} target="_blank" rel="noopener noreferrer">
+                                        Cetak Tiket
+                                    </a>
+                                </Button>
+                            )}
                             {canEdit && (
                                 <Button variant="secondary" asChild>
                                     <Link href={route('pengajuans.edit', item.id)}>

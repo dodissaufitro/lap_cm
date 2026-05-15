@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\MenuPermissionService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -38,13 +39,20 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $user = $request->user();
+
+        if ($user) {
+            MenuPermissionService::ensureDefaults();
+        }
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'appLogoUrl' => asset(config('brand.logo')),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
+                'allowedMenuKeys' => $user ? MenuPermissionService::allowedMenuKeysFor($user) : [],
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

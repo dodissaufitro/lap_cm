@@ -205,6 +205,7 @@ function MenuGridCard({
 export function NavMenuCards({ items = mainNavItems, className, fillScreen = false, guestMode = false }: NavMenuCardsProps) {
     const page = usePage<SharedData & { menuCounts?: MenuCounts }>();
     const role = page.props.auth?.user?.role;
+    const allowedMenuKeys = page.props.auth?.allowedMenuKeys ?? [];
     const menuCounts = page.props.menuCounts ?? {};
 
     const visibleItems = items.filter((item) => {
@@ -214,6 +215,10 @@ export function NavMenuCards({ items = mainNavItems, className, fillScreen = fal
 
         if (guestMode) {
             return true;
+        }
+
+        if (item.menuKey) {
+            return allowedMenuKeys.includes(item.menuKey);
         }
 
         if (!item.roles?.length) {

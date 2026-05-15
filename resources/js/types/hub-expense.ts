@@ -9,6 +9,12 @@ export interface HubExpenseListItem {
     date: string;
     editHref?: string;
     deleteHref?: string;
+    actionHref?: string;
+    actionLabel?: string;
+    actionDisabled?: boolean;
+    actionDisabledReason?: string;
+    ticketHref?: string;
+    ticketLabel?: string;
 }
 
 import { type PaginatedLink } from '@/types/crud';
@@ -29,4 +35,6 @@ export interface HubExpenseViewProps {
     /** @default sheet-only */
     createPlacement?: 'everywhere' | 'sheet-only';
     paginationLinks?: PaginatedLink[];
+    backHref?: string;
+    backLabel?: string;
 }

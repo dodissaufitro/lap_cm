@@ -21,6 +21,7 @@ interface Props {
     filters: { search: string; status: string };
     statusOptions: SelectOption[];
     canCreate: boolean;
+    scopeOwnOnly?: boolean;
 }
 
 const statusLabelMap: Record<string, string> = {
@@ -33,7 +34,7 @@ const statusLabelMap: Record<string, string> = {
     dibatalkan: 'Dibatalkan',
 };
 
-export default function PengajuansIndex({ items, canCreate }: Props) {
+export default function PengajuansIndex({ items, canCreate, scopeOwnOnly = false }: Props) {
     const { auth } = usePage<SharedData>().props;
 
     const listItems: HubExpenseListItem[] = items.data.map((item) => ({
@@ -41,7 +42,7 @@ export default function PengajuansIndex({ items, canCreate }: Props) {
         href: route('pengajuans.show', item.id),
         icon: '📋',
         title: item.nomor_pengajuan,
-        subtitle: item.sarana?.nama_sarana ?? item.user?.name ?? 'Pengajuan sarana',
+        subtitle: item.sarana?.nama_sarana ?? (scopeOwnOnly ? 'Pengajuan Anda' : (item.user?.name ?? 'Pengajuan sarana')),
         amount: statusLabelMap[item.status] ?? item.status,
         date: hubExpenseRowDate(item.tanggal_pengajuan),
         ...pengajuanRowPermissions(item, auth.user),
@@ -51,7 +52,8 @@ export default function PengajuansIndex({ items, canCreate }: Props) {
         <HubModuleLayout>
             <Head title="Pengajuan" />
             <HubExpenseView
-                title="Pengajuan"
+                title={scopeOwnOnly ? 'Pengajuan Saya' : 'Pengajuan'}
+                periodLabel={scopeOwnOnly ? 'Hanya pengajuan yang Anda buat' : undefined}
                 summaryValue={items.total}
                 summaryEmoji="📋"
                 items={listItems}

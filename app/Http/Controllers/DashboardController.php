@@ -42,8 +42,8 @@ class DashboardController extends Controller
         $pengajuanQuery = Pengajuan::query();
         $today = now()->toDateString();
 
-        if ($user->role === UserRole::Pemohon) {
-            $pengajuanQuery->where('user_id', $user->id);
+        if ($user->isPemohon()) {
+            $pengajuanQuery->visibleTo($user);
 
             return [
                 [
@@ -127,12 +127,9 @@ class DashboardController extends Controller
     private function recentPengajuans(User $user): array
     {
         $query = Pengajuan::query()
+            ->visibleTo($user)
             ->with(['user:id,name', 'sarana:id,nama_sarana'])
             ->latest();
-
-        if ($user->role === UserRole::Pemohon) {
-            $query->where('user_id', $user->id);
-        }
 
         return $query
             ->limit(8)
@@ -178,7 +175,7 @@ class DashboardController extends Controller
             ->with('user:id,name')
             ->latest('created_at');
 
-        if ($user->role === UserRole::Pemohon) {
+        if ($user->isPemohon()) {
             $query->where('user_id', $user->id);
         }
 
@@ -208,7 +205,7 @@ class DashboardController extends Controller
             ->where('mulai', '>=', now())
             ->orderBy('mulai');
 
-        if ($user->role === UserRole::Pemohon) {
+        if ($user->isPemohon()) {
             $query->whereHas('pengajuan', fn ($q) => $q->where('user_id', $user->id));
         }
 

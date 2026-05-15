@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TiketVerifikasiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,7 +14,9 @@ Route::get('/', function (Request $request) {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::middleware(['auth', 'active'])->group(function () {
+Route::get('tiket/{token}', [TiketVerifikasiController::class, 'show'])->name('tiket.verifikasi');
+
+Route::middleware(['auth', 'active', 'menu'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 });
 
