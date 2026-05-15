@@ -186,11 +186,12 @@
 
 @layer utilities {
     .hub-app-bg {
-        background-color: var(--background);
+        background-color: hsl(228 45% 97%);
         background-image:
-            radial-gradient(ellipse 90% 55% at 50% -15%, hsl(211 100% 52% / 0.12), transparent 55%),
-            radial-gradient(circle at 95% 5%, hsl(211 80% 45% / 0.06), transparent 35%),
-            radial-gradient(circle at 5% 85%, hsl(152 69% 46% / 0.05), transparent 40%);
+            radial-gradient(ellipse 95% 60% at 50% -12%, hsl(211 95% 55% / 0.28), transparent 58%),
+            radial-gradient(circle at 92% 6%, hsl(280 85% 62% / 0.16), transparent 40%),
+            radial-gradient(circle at 8% 88%, hsl(152 65% 42% / 0.14), transparent 42%),
+            radial-gradient(circle at 50% 105%, hsl(211 90% 50% / 0.1), transparent 48%);
     }
 
     .dark .hub-app-bg {
@@ -209,10 +210,21 @@
         background-image: repeating-radial-gradient(
             circle at 50% 120%,
             transparent 0,
-            transparent 28px,
-            hsl(211 100% 52% / 0.03) 28px,
-            hsl(211 100% 52% / 0.03) 29px
+            transparent 26px,
+            hsl(211 85% 48% / 0.085) 26px,
+            hsl(211 85% 48% / 0.085) 27px
         );
+        z-index: 0;
+    }
+
+    .hub-app-bg::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.55;
+        background-image: radial-gradient(circle at 20% 30%, hsl(330 90% 65% / 0.08), transparent 45%),
+            radial-gradient(circle at 80% 70%, hsl(211 95% 55% / 0.07), transparent 40%);
         z-index: 0;
     }
 
@@ -235,10 +247,11 @@
     }
 
     .hub-glass-card {
-        @apply relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/60 shadow-[0_12px_40px_-16px_rgba(15,23,42,0.2)] backdrop-blur-xl transition-all duration-300 ease-out;
+        @apply relative z-[1] overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white/75 shadow-[0_12px_40px_-16px_rgba(15,23,42,0.15)] backdrop-blur-xl transition-all duration-300 ease-out;
         box-shadow:
-            0 12px 40px -16px rgba(15, 23, 42, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.65);
+            0 12px 40px -16px rgba(15, 23, 42, 0.14),
+            0 0 0 1px rgba(255, 255, 255, 0.9) inset,
+            inset 0 1px 0 rgba(255, 255, 255, 0.85);
     }
 
     .dark .hub-glass-card {
@@ -249,7 +262,10 @@
     }
 
     .hub-glass-card-featured {
-        @apply border-primary/25 bg-gradient-to-br from-primary/15 via-transparent to-violet-500/10;
+        @apply z-[1] border-primary/30 bg-gradient-to-br from-primary/20 via-white/50 to-violet-500/15;
+        box-shadow:
+            0 16px 48px -20px hsl(211 100% 52% / 0.2),
+            0 0 0 1px rgba(255, 255, 255, 0.9) inset;
     }
 
     .hub-status-banner {
@@ -260,11 +276,35 @@
         @apply w-full;
     }
 
+    .hub-status-banner.hub-glass-card-featured {
+        @apply border-sky-200/80 from-sky-50/90 via-white/80 to-violet-100/50;
+    }
+
+    .hub-status-banner-label {
+        @apply text-[10px] font-medium tracking-wider text-sky-700/80 uppercase sm:text-xs dark:text-sky-300/90;
+    }
+
+    .hub-status-banner-title {
+        @apply text-lg font-semibold leading-tight text-slate-900 sm:mt-0.5 sm:text-xl lg:text-2xl dark:text-white;
+    }
+
+    .hub-status-banner-desc {
+        @apply line-clamp-2 text-sm leading-snug text-slate-600 sm:text-base dark:text-slate-300;
+    }
+
+    .hub-status-banner .hub-glass-ring-inner svg {
+        @apply text-emerald-600 dark:text-emerald-300;
+    }
+
     .dark .hub-glass-card-featured {
-        @apply from-primary/20 to-violet-600/15;
+        @apply border-primary/25 bg-gradient-to-br from-primary/25 via-violet-950/40 to-[hsl(258,42%,10%)];
         box-shadow:
             0 20px 56px -24px hsl(280 100% 60% / 0.35),
             inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .dark .hub-status-banner.hub-glass-card-featured {
+        @apply border-sky-500/20 from-sky-950/50 via-[hsl(258,38%,14%)] to-violet-950/30;
     }
 
     .hub-glass-card-active {
@@ -276,7 +316,10 @@
 
     @media (hover: hover) and (pointer: fine) {
         .hub-glass-card-interactive:hover {
-            @apply -translate-y-1 border-white/20;
+            @apply -translate-y-1 border-slate-300/90 bg-white/90;
+            box-shadow:
+                0 16px 44px -18px rgba(15, 23, 42, 0.12),
+                0 0 0 1px rgba(255, 255, 255, 0.95) inset;
         }
 
         .dark .hub-glass-card-interactive:hover {
@@ -292,15 +335,15 @@
     }
 
     .hub-glass-ring {
-        @apply relative flex size-[4.25rem] shrink-0 items-center justify-center sm:size-[4.75rem];
+        @apply relative flex size-[4.75rem] shrink-0 items-center justify-center sm:size-[5.25rem] lg:size-[5.75rem] xl:size-[6.25rem];
     }
 
     .hub-glass-ring-sm {
-        @apply size-[3.5rem] sm:size-[3.75rem];
+        @apply size-[3.75rem] sm:size-[4.25rem] lg:size-[4.5rem];
     }
 
     .hub-glass-ring-sm .hub-glass-ring-inner {
-        @apply size-[2.65rem] sm:size-[2.85rem];
+        @apply size-[2.85rem] sm:size-[3.1rem] lg:size-[3.25rem];
     }
 
     .hub-glass-ring-svg {
@@ -308,6 +351,10 @@
     }
 
     .hub-glass-ring-track {
+        stroke: hsl(215 16% 82% / 0.9);
+    }
+
+    .dark .hub-glass-ring-track {
         stroke: hsl(0 0% 100% / 0.12);
     }
 
@@ -346,7 +393,7 @@
     }
 
     .hub-glass-ring-inner {
-        @apply relative z-10 flex size-[3.25rem] items-center justify-center rounded-full bg-[hsl(258,32%,16%)] shadow-inner transition-transform duration-300 ease-out sm:size-[3.5rem];
+        @apply relative z-10 flex size-[3.5rem] items-center justify-center rounded-full bg-[hsl(258,32%,16%)] shadow-inner transition-transform duration-300 ease-out sm:size-[3.85rem] lg:size-[4.1rem] xl:size-[4.35rem];
     }
 
     .dark .hub-glass-ring-inner {
@@ -363,7 +410,8 @@
     }
 
     .hub-glass-header {
-        @apply border-border/50 bg-background/80 backdrop-blur-xl;
+        @apply relative z-20 border-border/60 bg-white/75 backdrop-blur-xl;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
     }
 
     .dark .hub-glass-header {
@@ -372,11 +420,6 @@
 
     .hub-table-wrap {
         @apply overflow-hidden rounded-2xl border border-white/5 bg-card shadow-[0_8px_32px_-8px_rgba(0,0,0,0.55)];
-    }
-
-    .hub-expense-bg {
-        background-color: #050517;
-        color: #ffffff;
     }
 
     .hub-expense-hero {
@@ -389,23 +432,42 @@
         flex: 1 1 auto;
         min-height: 0;
         border-radius: 28px 28px 0 0;
+        background-color: #ffffff;
+        box-shadow: 0 -12px 48px -16px rgba(15, 23, 42, 0.12);
+    }
+
+    .dark .hub-expense-sheet {
         background-color: #0d0d2b;
+        box-shadow: none;
     }
 
     .hub-expense-row-icon {
         border-radius: 14px;
+        background: hsl(220 14% 96%);
+    }
+
+    .dark .hub-expense-row-icon {
         background: rgba(255, 255, 255, 0.07);
     }
 
     .hub-expense-row-photo {
+        background: hsl(220 14% 94%);
+    }
+
+    .dark .hub-expense-row-photo {
         background: rgba(255, 255, 255, 0.05);
     }
 
     .hub-sarana-photo {
+        overflow: hidden;
         border-radius: 1rem;
+        border: 1px solid hsl(220 13% 91%);
+        background: hsl(220 14% 96%);
+    }
+
+    .dark .hub-sarana-photo {
         border: 1px solid rgba(255, 255, 255, 0.1);
         background: rgba(255, 255, 255, 0.05);
-        overflow: hidden;
     }
 
     .hub-sarana-photo img {
@@ -452,46 +514,92 @@
         align-items: center;
         justify-content: center;
         border-radius: 0.75rem;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        background: rgba(255, 255, 255, 0.1);
-        color: #ffffff;
+        border: 1px solid hsl(220 13% 91%);
+        background: #ffffff;
+        color: hsl(222 47% 20%);
         transition: background 0.15s ease, border-color 0.15s ease;
     }
 
     .hub-expense-action-btn:hover {
+        background: hsl(220 14% 96%);
+        border-color: hsl(220 13% 85%);
+    }
+
+    .dark .hub-expense-action-btn {
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+    }
+
+    .dark .hub-expense-action-btn:hover {
         background: rgba(255, 255, 255, 0.18);
         border-color: rgba(255, 255, 255, 0.28);
     }
 
     .hub-expense-action-primary {
+        color: #ffffff;
         background: linear-gradient(135deg, #c77dff, #7928ca);
         border-color: transparent;
-        box-shadow: 0 4px 16px -4px rgba(199, 125, 255, 0.6);
+        box-shadow: 0 4px 16px -4px rgba(199, 125, 255, 0.45);
     }
 
     .hub-expense-action-edit {
+        color: hsl(273 67% 35%);
+        background: hsl(270 100% 97%);
+        border-color: hsl(270 60% 88%);
+    }
+
+    .dark .hub-expense-action-edit {
         color: #e9d5ff;
         background: rgba(199, 125, 255, 0.2);
         border-color: rgba(199, 125, 255, 0.35);
     }
 
     .hub-expense-action-delete {
+        color: hsl(0 72% 40%);
+        background: hsl(0 86% 97%);
+        border-color: hsl(0 80% 88%);
+    }
+
+    .hub-expense-action-delete:hover {
+        background: hsl(0 86% 94%);
+        border-color: hsl(0 72% 80%);
+    }
+
+    .dark .hub-expense-action-delete {
         color: #fecaca;
         background: rgba(239, 68, 68, 0.2);
         border-color: rgba(248, 113, 113, 0.4);
     }
 
-    .hub-expense-action-delete:hover {
+    .dark .hub-expense-action-delete:hover {
         background: rgba(239, 68, 68, 0.35);
+    }
+
+    .hub-expense-sheet-handle {
+        background: hsl(220 13% 85%);
+    }
+
+    .dark .hub-expense-sheet-handle {
+        background: rgba(255, 255, 255, 0.2);
     }
 
     @media (min-width: 1024px) {
         .hub-expense-panel {
+            overflow: hidden;
             border-radius: 2rem;
+            border: 1px solid hsl(220 13% 91% / 0.9);
+            background: rgba(255, 255, 255, 0.78);
+            box-shadow:
+                0 24px 80px -20px rgba(15, 23, 42, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+        }
+
+        .dark .hub-expense-panel {
             border: 1px solid rgba(255, 255, 255, 0.1);
             background-color: #050517;
             box-shadow: 0 24px 80px -20px rgba(0, 0, 0, 0.65);
-            color: #ffffff;
         }
 
         .hub-expense-hero {
@@ -501,12 +609,21 @@
 
         .hub-expense-sheet {
             border-radius: 0;
+            background-color: hsl(228 40% 98%);
+            box-shadow: none;
+        }
+
+        .dark .hub-expense-sheet {
             background-color: #0d0d2b;
         }
 
         .hub-expense-row:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: hsl(220 14% 96%);
             opacity: 1;
+        }
+
+        .dark .hub-expense-row:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .hub-expense-row:active {

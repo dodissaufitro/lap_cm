@@ -7,6 +7,10 @@ export const APP_LOGO_URL = '/images/logo_tch.png';
 
 export const APP_TITLE = 'Tanah Datar Creatif HUB';
 
+export const APP_SHORT_NAME = 'TCH';
+
+export const APP_TAGLINE = 'Smart Enterprise Platform';
+
 export function useAppLogoUrl(): string {
     const { appLogoUrl } = usePage<SharedData>().props;
 

@@ -15,7 +15,14 @@ function HubExpenseDonut({ value, emoji }: { value: string; emoji: string }) {
                         <stop offset="100%" stopColor="#3d4f7c" />
                     </linearGradient>
                 </defs>
-                <circle cx="100" cy="100" r="78" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="22" />
+                <circle
+                    cx="100"
+                    cy="100"
+                    r="78"
+                    fill="none"
+                    className="stroke-slate-200 dark:stroke-white/10"
+                    strokeWidth="22"
+                />
                 <circle
                     cx="100"
                     cy="100"
@@ -31,7 +38,7 @@ function HubExpenseDonut({ value, emoji }: { value: string; emoji: string }) {
                 <span className="text-3xl leading-none lg:text-4xl" aria-hidden>
                     {emoji}
                 </span>
-                <p className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-[2.75rem] lg:text-5xl">{value}</p>
+                <p className="mt-2 text-4xl font-bold tracking-tight text-foreground sm:text-[2.75rem] lg:text-5xl">{value}</p>
             </div>
         </div>
     );
@@ -106,14 +113,14 @@ function HubExpenseRow({ icon, imageUrl, title, subtitle, amount, date, href, ed
             <Link href={href} prefetch className="flex min-w-0 flex-1 items-center gap-3.5 lg:gap-4">
                 <HubExpenseRowIcon icon={icon} imageUrl={imageUrl} title={title} />
                 <div className="min-w-0 flex-1">
-                    <p className="truncate text-[15px] font-semibold leading-tight text-white lg:text-base">{title}</p>
-                    <p className="mt-0.5 truncate text-[13px] text-[#8b90b8] lg:text-sm">{subtitle}</p>
+                    <p className="truncate text-[15px] leading-tight font-semibold text-foreground lg:text-base">{title}</p>
+                    <p className="mt-0.5 truncate text-[13px] text-muted-foreground lg:text-sm">{subtitle}</p>
                 </div>
             </Link>
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
                 <div className="text-right">
-                    <p className="text-[15px] font-semibold leading-tight text-white lg:text-base">{amount}</p>
-                    <p className="mt-0.5 text-[12px] text-[#8b90b8] lg:text-sm">{date}</p>
+                    <p className="text-[15px] leading-tight font-semibold text-foreground lg:text-base">{amount}</p>
+                    <p className="mt-0.5 text-[12px] text-muted-foreground lg:text-sm">{date}</p>
                 </div>
                 {hasActions && <HubExpenseRowActions editHref={editHref} deleteHref={deleteHref} />}
             </div>
@@ -142,11 +149,11 @@ export function HubExpenseView({
 
     return (
         <div className="flex h-full min-h-0 flex-col lg:flex-row-reverse lg:overflow-hidden">
-            <div className="hub-expense-hero safe-x relative shrink-0 px-5 pb-2 pt-4 sm:px-6 sm:pt-5 lg:flex lg:w-[min(100%,22rem)] lg:flex-col lg:justify-center lg:border-l lg:border-white/10 lg:px-8 lg:py-8 xl:w-80">
+            <div className="hub-expense-hero safe-x relative shrink-0 px-5 pb-2 pt-4 sm:px-6 sm:pt-5 lg:flex lg:w-[min(100%,22rem)] lg:flex-col lg:justify-center lg:border-l lg:border-slate-200 lg:px-8 lg:py-8 dark:lg:border-white/10 xl:w-80">
                 <Link
                     href="/dashboard"
                     prefetch
-                    className="absolute top-4 left-4 flex size-9 items-center justify-center rounded-full text-white/80 transition hover:bg-white/10 sm:left-5 lg:hidden"
+                    className="absolute top-4 left-4 flex size-9 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted lg:hidden"
                     aria-label="Kembali ke dashboard"
                 >
                     <ChevronLeft className="size-5" />
@@ -154,9 +161,9 @@ export function HubExpenseView({
 
                 <div className="flex items-start justify-between gap-3 pr-1 pl-10 sm:pl-11 lg:pl-0">
                     <div className="min-w-0">
-                        <h1 className="text-[22px] leading-tight font-bold text-white sm:text-2xl lg:text-3xl">{title}</h1>
+                        <h1 className="text-[22px] leading-tight font-bold text-foreground sm:text-2xl lg:text-3xl">{title}</h1>
                         {periodLabel ? (
-                            <p className="mt-0.5 text-sm text-[#8b90b8] sm:text-[15px] lg:text-base">{periodLabel}</p>
+                            <p className="mt-0.5 text-sm text-muted-foreground sm:text-[15px] lg:text-base">{periodLabel}</p>
                         ) : null}
                     </div>
                     <div className="flex shrink-0 items-center gap-2 pt-0.5">
@@ -170,7 +177,7 @@ export function HubExpenseView({
                                 <Plus className="size-5" />
                             </Link>
                         )}
-                        <div className="flex size-9 items-center justify-center text-white/90 lg:size-10" aria-hidden>
+                        <div className="flex size-9 items-center justify-center text-muted-foreground lg:size-10" aria-hidden>
                             <PieChart className="size-[22px] stroke-[1.5]" />
                         </div>
                     </div>
@@ -197,7 +204,7 @@ export function HubExpenseView({
             </div>
 
             <div className="hub-expense-sheet safe-x flex min-h-0 flex-1 flex-col px-5 pt-3 pb-6 sm:px-6 lg:rounded-none lg:px-8 lg:py-6">
-                <div className="mx-auto mb-4 h-1 w-10 shrink-0 rounded-full bg-white/20 lg:hidden" aria-hidden />
+                <div className="hub-expense-sheet-handle mx-auto mb-4 h-1 w-10 shrink-0 rounded-full lg:hidden" aria-hidden />
 
                 {showCreateAboveList && (
                     <Link
@@ -213,9 +220,9 @@ export function HubExpenseView({
                 <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain [-webkit-overflow-scrolling:touch] lg:pr-1">
                     <FlashAlert />
                     {items.length === 0 ? (
-                        <p className="py-10 text-center text-sm text-[#8b90b8] lg:text-base">{emptyMessage}</p>
+                        <p className="py-10 text-center text-sm text-muted-foreground lg:text-base">{emptyMessage}</p>
                     ) : (
-                        <div className="divide-y divide-white/5">
+                        <div className="divide-y divide-slate-100 dark:divide-white/5">
                             {items.map((item) => (
                                 <HubExpenseRow key={item.id} {...item} />
                             ))}
@@ -224,8 +231,8 @@ export function HubExpenseView({
                 </div>
 
                 {paginationLinks && paginationLinks.length > 0 && (
-                    <div className="mt-3 shrink-0 border-t border-white/10 pt-3 [&_a]:text-[#8b90b8] [&_span]:text-white">
-                        <PaginationLinks links={paginationLinks} variant="dark" />
+                    <div className="mt-3 shrink-0 border-t border-slate-200 pt-3 dark:border-white/10">
+                        <PaginationLinks links={paginationLinks} />
                     </div>
                 )}
             </div>

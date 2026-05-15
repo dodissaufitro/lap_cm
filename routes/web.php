@@ -1,10 +1,15 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
+    if ($request->user()) {
+        return redirect()->route('dashboard');
+    }
+
     return Inertia::render('welcome');
 })->name('home');
 
