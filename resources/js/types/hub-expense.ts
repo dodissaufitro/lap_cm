@@ -2,6 +2,7 @@ export interface HubExpenseListItem {
     id: number;
     href: string;
     icon: string;
+    imageUrl?: string;
     title: string;
     subtitle: string;
     amount: string;

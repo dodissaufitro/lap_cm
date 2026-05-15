@@ -82,15 +82,29 @@ function HubExpenseRowActions({ editHref, deleteHref }: { editHref?: string; del
     );
 }
 
-function HubExpenseRow({ icon, title, subtitle, amount, date, href, editHref, deleteHref }: HubExpenseListItem) {
+function HubExpenseRowIcon({ icon, imageUrl, title }: { icon: string; imageUrl?: string; title: string }) {
+    if (imageUrl) {
+        return (
+            <div className="hub-expense-row-icon hub-expense-row-photo size-12 shrink-0 overflow-hidden p-0 lg:size-14">
+                <img src={imageUrl} alt={title} className="size-full object-cover" loading="lazy" />
+            </div>
+        );
+    }
+
+    return (
+        <div className="hub-expense-row-icon flex size-12 shrink-0 items-center justify-center text-xl lg:size-14 lg:text-2xl">
+            {icon}
+        </div>
+    );
+}
+
+function HubExpenseRow({ icon, imageUrl, title, subtitle, amount, date, href, editHref, deleteHref }: HubExpenseListItem) {
     const hasActions = Boolean(editHref || deleteHref);
 
     return (
         <div className="hub-expense-row flex items-center gap-2 rounded-xl py-2 transition lg:gap-3 lg:px-1 lg:py-2.5">
             <Link href={href} prefetch className="flex min-w-0 flex-1 items-center gap-3.5 lg:gap-4">
-                <div className="hub-expense-row-icon flex size-12 shrink-0 items-center justify-center text-xl lg:size-14 lg:text-2xl">
-                    {icon}
-                </div>
+                <HubExpenseRowIcon icon={icon} imageUrl={imageUrl} title={title} />
                 <div className="min-w-0 flex-1">
                     <p className="truncate text-[15px] font-semibold leading-tight text-white lg:text-base">{title}</p>
                     <p className="mt-0.5 truncate text-[13px] text-[#8b90b8] lg:text-sm">{subtitle}</p>

@@ -1,12 +1,11 @@
 ﻿import { DeleteButton } from '@/components/crud/delete-button';
 import { FlashAlert } from '@/components/crud/flash-alert';
-import { PageHeader } from '@/components/crud/page-header';
 import { StatusBadge } from '@/components/dashboard/status-badge';
 import { Button } from '@/components/ui/button';
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import HubModuleLayout from '@/layouts/hub-module-layout';
+import { storageUrl } from '@/lib/storage-url';
 import { Head, Link } from '@inertiajs/react';
-import { Pencil } from 'lucide-react';
+import { Building2, ChevronLeft, Pencil } from 'lucide-react';
 
 interface Sarana {
     id: number;
@@ -33,81 +32,95 @@ const statusLabels: Record<string, string> = {
 };
 
 export default function SaranasShow({ item, canManage }: Props) {
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Sarana', href: '/saranas' },
-        { title: item.nama_sarana, href: route('saranas.show', item.id) },
-    ];
+    const fotoUrl = storageUrl(item.foto);
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <HubModuleLayout>
             <Head title={item.nama_sarana} />
 
-            <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
-                <PageHeader
-                    title={item.nama_sarana}
-                    actions={
-                        canManage ? (
-                            <>
-                                <Button variant="secondary" asChild>
-                                    <Link href={route('saranas.edit', item.id)}>
-                                        <Pencil className="size-4" />
-                                        Edit
-                                    </Link>
-                                </Button>
-                                <DeleteButton href={route('saranas.destroy', item.id)} />
-                            </>
-                        ) : undefined
-                    }
-                />
+            <div className="flex h-full min-h-0 flex-col overflow-hidden">
+                <div className="safe-x relative shrink-0 border-b border-white/10 px-5 py-4 sm:px-6 lg:px-8">
+                    <Link
+                        href={route('saranas.index')}
+                        prefetch
+                        className="absolute top-4 left-4 flex size-9 items-center justify-center rounded-full text-white/80 transition hover:bg-white/10 sm:left-5 lg:left-8"
+                        aria-label="Kembali ke daftar sarana"
+                    >
+                        <ChevronLeft className="size-5" />
+                    </Link>
 
-                <FlashAlert />
-
-                {item.foto && (
-                    <div className="hub-table-wrap">
-                        <img src={`/storage/${item.foto}`} alt={item.nama_sarana} className="max-h-80 w-full object-cover" />
+                    <div className="pl-10 sm:pl-11 lg:pl-0">
+                        <h1 className="text-[22px] leading-tight font-bold text-white sm:text-2xl lg:text-3xl">{item.nama_sarana}</h1>
+                        <p className="mt-0.5 font-mono text-sm text-[#8b90b8]">{item.kode_sarana}</p>
                     </div>
-                )}
 
-                <div className="hub-surface p-6">
-                    <dl className="grid gap-4 sm:grid-cols-2">
-                        <div>
-                            <dt className="text-sm text-muted-foreground">Kode</dt>
-                            <dd className="mt-1 font-mono font-medium">{item.kode_sarana}</dd>
+                    {canManage && (
+                        <div className="mt-4 flex flex-wrap gap-2 pl-10 sm:pl-11 lg:pl-0">
+                            <Button variant="secondary" size="sm" className="gap-2" asChild>
+                                <Link href={route('saranas.edit', item.id)}>
+                                    <Pencil className="size-4" />
+                                    Edit
+                                </Link>
+                            </Button>
+                            <DeleteButton href={route('saranas.destroy', item.id)} />
                         </div>
-                        <div>
-                            <dt className="text-sm text-muted-foreground">Kategori</dt>
-                            <dd className="mt-1 font-medium">{item.kategori?.nama_kategori ?? '-'}</dd>
-                        </div>
-                        <div>
-                            <dt className="text-sm text-muted-foreground">Status</dt>
-                            <dd className="mt-1">
-                                <StatusBadge
-                                    status={item.status}
-                                    label={statusLabels[item.status] ?? item.status}
-                                    variant="sarana"
-                                />
-                            </dd>
-                        </div>
-                        <div>
-                            <dt className="text-sm text-muted-foreground">Lokasi</dt>
-                            <dd className="mt-1">{item.lokasi || '-'}</dd>
-                        </div>
-                        <div>
-                            <dt className="text-sm text-muted-foreground">Kapasitas</dt>
-                            <dd className="mt-1">{item.kapasitas ?? '-'}</dd>
-                        </div>
-                        <div className="sm:col-span-2">
-                            <dt className="text-sm text-muted-foreground">Fasilitas</dt>
-                            <dd className="mt-1 whitespace-pre-wrap">{item.fasilitas || '-'}</dd>
-                        </div>
-                        <div className="sm:col-span-2">
-                            <dt className="text-sm text-muted-foreground">Keterangan</dt>
-                            <dd className="mt-1 whitespace-pre-wrap">{item.keterangan || '-'}</dd>
-                        </div>
-                    </dl>
+                    )}
+                </div>
+
+                <div className="safe-x min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-5 py-4 pb-8 sm:px-6 lg:px-8">
+                    <FlashAlert />
+
+                    <div className="hub-sarana-photo mb-6">
+                        {fotoUrl ? (
+                            <img src={fotoUrl} alt={item.nama_sarana} className="max-h-80 w-full object-cover lg:max-h-96" />
+                        ) : (
+                            <div
+                                className="flex min-h-[12rem] flex-col items-center justify-center gap-3 px-6 py-10 text-[#8b90b8] lg:min-h-[14rem]"
+                                role="img"
+                                aria-label="Belum ada foto sarana"
+                            >
+                                <Building2 className="size-12 text-white/25" strokeWidth={1.25} />
+                                <p className="text-center text-sm">Belum ada foto sarana</p>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
+                        <dl className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <dt className="text-sm text-[#8b90b8]">Kategori</dt>
+                                <dd className="mt-1 font-medium text-white">{item.kategori?.nama_kategori ?? '-'}</dd>
+                            </div>
+                            <div>
+                                <dt className="text-sm text-[#8b90b8]">Status</dt>
+                                <dd className="mt-1">
+                                    <StatusBadge
+                                        status={item.status}
+                                        label={statusLabels[item.status] ?? item.status}
+                                        variant="sarana"
+                                    />
+                                </dd>
+                            </div>
+                            <div>
+                                <dt className="text-sm text-[#8b90b8]">Lokasi</dt>
+                                <dd className="mt-1 text-white">{item.lokasi || '-'}</dd>
+                            </div>
+                            <div>
+                                <dt className="text-sm text-[#8b90b8]">Kapasitas</dt>
+                                <dd className="mt-1 text-white">{item.kapasitas ?? '-'}</dd>
+                            </div>
+                            <div className="sm:col-span-2">
+                                <dt className="text-sm text-[#8b90b8]">Fasilitas</dt>
+                                <dd className="mt-1 whitespace-pre-wrap text-white">{item.fasilitas || '-'}</dd>
+                            </div>
+                            <div className="sm:col-span-2">
+                                <dt className="text-sm text-[#8b90b8]">Keterangan</dt>
+                                <dd className="mt-1 whitespace-pre-wrap text-white">{item.keterangan || '-'}</dd>
+                            </div>
+                        </dl>
+                    </div>
                 </div>
             </div>
-        </AppLayout>
+        </HubModuleLayout>
     );
 }

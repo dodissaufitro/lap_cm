@@ -397,6 +397,30 @@
         background: rgba(255, 255, 255, 0.07);
     }
 
+    .hub-expense-row-photo {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .hub-sarana-photo {
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+    }
+
+    .hub-sarana-photo img {
+        display: block;
+        width: 100%;
+        max-height: 16rem;
+        object-fit: cover;
+    }
+
+    @media (min-width: 1024px) {
+        .hub-sarana-photo img {
+            max-height: 20rem;
+        }
+    }
+
     .hub-expense-row:active {
         opacity: 0.85;
     }
