@@ -1,7 +1,7 @@
+import { APP_TITLE, useAppLogoUrl } from '@/lib/app-brand';
 import { cn } from '@/lib/utils';
 
-export const APP_LOGO_URL = '/storage/logo/logo_tch.png';
-export const APP_TITLE = 'Tanah Datar Creatif HUB';
+export { APP_LOGO_URL, APP_TITLE } from '@/lib/app-brand';
 
 interface AppLogoProps {
     showTitle?: boolean;
@@ -10,10 +10,12 @@ interface AppLogoProps {
 }
 
 export default function AppLogo({ showTitle = true, className, imageClassName }: AppLogoProps) {
+    const logoUrl = useAppLogoUrl();
+
     return (
         <div className={cn('flex min-w-0 items-center gap-2.5', className)}>
             <img
-                src={APP_LOGO_URL}
+                src={logoUrl}
                 alt={APP_TITLE}
                 className={cn('h-9 w-auto shrink-0 object-contain sm:h-10', imageClassName)}
             />

@@ -2,7 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { LoaderCircle, Lock, Mail } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
-import { APP_LOGO_URL, APP_TITLE } from '@/components/app-logo';
+import { APP_TITLE, useAppLogoUrl } from '@/lib/app-brand';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -31,6 +31,7 @@ const roleBadgeClass: Record<DemoUser['role'], string> = {
 };
 
 export default function Login({ status, canResetPassword, demoUsers = [] }: LoginProps) {
+    const logoUrl = useAppLogoUrl();
     const { data, setData, post, processing, errors, reset } = useForm<LoginForm>({
         email: '',
         password: '',
@@ -102,7 +103,7 @@ export default function Login({ status, canResetPassword, demoUsers = [] }: Logi
                                 className="mb-5 inline-flex flex-col items-center gap-2 transition hover:opacity-90"
                             >
                                 <img
-                                    src={APP_LOGO_URL}
+                                    src={logoUrl}
                                     alt={APP_TITLE}
                                     className="h-16 w-auto object-contain sm:h-20"
                                 />
